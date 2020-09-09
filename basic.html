@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+<h2> Get Corona Virus Count</h2>
+
+<label for="From">From:</label>
+<input name="FromDate" id="fromDate" type="date" min= 2020-01-01 onchange="changeMinDate()">
+&nbsp;&nbsp;&nbsp;&nbsp
+<label for="To">To:</label>
+<input name="ToDate" id="toDate" type="date">
+
+<br><br>
+<button id="myBtn">Click Here!</button>
+<p id="demo"></p>
+
+<script>
+var today = new Date().toISOString().split('T')[0];
+document.getElementsByName("ToDate")[0].setAttribute('max', today);
+
+function changeMinDate()
+{
+	document.getElementsByName("ToDate")[0].setAttribute('min',document.getElementById("fromDate").value);
+}
+
+document.getElementById("myBtn").addEventListener("click", myFunction);
+function myFunction() {
+var d = new Date();
+  var request = new XMLHttpRequest()
+	request.open('GET', 'https://api.covid19api.com/country/India/status/confirmed?from='+document.getElementById("fromDate").value+"T00:00:00Z"+'&to='+document.getElementById("toDate").value+"T23:00:00Z", true)
+	request.onload = function () {
+  // Begin accessing JSON data here
+  var data = JSON.parse(this.response)
+var casesCount=0;
+//console.log(JSON.stringify(data));
+for(var i = 0; i < data.length; i++) {
+    var obj = data[i];
+	casesCount=casesCount+obj.Cases;
+}
+ document.getElementById("demo").innerHTML="No of cases in India from "+document.getElementById("fromDate").value+"to "+document.getElementById("toDate").value+" is: "+casesCount;
+}
+request.send()
+}
+</script>
+
+
+</body>
+
+</html>
